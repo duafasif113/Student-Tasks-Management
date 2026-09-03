@@ -9,7 +9,7 @@ const TopNav = () => {
       {/* Left Section */}
       <div>
         <h1 className="text-3xl font-bold text-gray-800">
-          Dashboard
+          GoodMorning!
         </h1>
         <p className="text-sm text-gray-500">
           Welcome back, Ali! Here's what's happening with your tasks.

@@ -23,6 +23,7 @@ const Subjects = lazy(() => import("./Pages/Subjects"));
 const Stats = lazy(() => import("./Pages/stat"));
 
 const Settings = lazy(() => import("./Pages/Settings"));
+const AddTask = lazy(() => import("./Pages/Addtask"));
 const NotFound = lazy(() => import("./Components/NotFound"));
 
 
@@ -43,6 +44,7 @@ function App() {
 
             {/* Tasks Page */}
             <Route path="tasks" element={<Tasks />} />
+
 
             {/* About Page */}
             <Route path="calender" element={<Calender />} />
