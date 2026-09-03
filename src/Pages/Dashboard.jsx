@@ -8,13 +8,16 @@ import { FaRegClock } from "react-icons/fa";
 
 
 
-
+import { DataContext } from '../context/UserContext';
+import { useContext } from 'react';
 
 
 
 import { Link } from 'react-router-dom';
 
 import { FaCheckSquare } from "react-icons/fa";
+
+
 
 
   const completedTasks = [
@@ -115,13 +118,73 @@ const linechartdata = [
 
 
 const Dashboard = () => {
+
+  const{tasks}=useContext(DataContext);
+   const getTaskStatus = (task) => {
+    if (task.status === "Completed") {
+      return "Completed";
+    }
+
+
+    
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    if (dueDate < today) {
+      return "Overdue";
+    }
+
+    return "Pending";
+  };
+
+  const totalTasks = tasks.length;
+
+  const completedTask = tasks.filter(
+    (task) => getTaskStatus(task) === "Completed"
+  ).length;
+
+
+  const completionPercentage =
+  totalTasks === 0
+    ? 0
+    : Math.round((completedTask / totalTasks) * 100);
+
+  const pendingTasks = tasks.filter(
+    (task) => getTaskStatus(task) === "Pending"
+  ).length;
+
+
+  const pendingPercentage =
+  totalTasks === 0
+    ? 0
+    : Math.round((pendingTasks / totalTasks) * 100);
+
+
+  const overdueTasks = tasks.filter(
+    (task) => getTaskStatus(task) === "Overdue"
+  ).length;
+
+
+  const overduePercentage =
+  totalTasks === 0
+    ? 0
+    : Math.round((overdueTasks / totalTasks) * 100);
+
   return (
+
+    <>
+
+    
     < div className=' flex flex-col gap-4 '>
     <div className='flex gap-2'>
-      <UpdateCards title="Total Tasks" count="24" per="+12"  color="bg-purple-600" icon={<GrTasks/>}/>
-      <UpdateCards title="Completed" count="12" per="+8"  color="bg-green-400" icon={<SiGoogletasks/>}/>
-      <UpdateCards title="Pending" count="8" per="+15"  color="bg-yellow-400" icon={<MdOutlinePendingActions/>}/>
-      <UpdateCards title="Overdue" count="4" per="-5"  color="bg-red-600" icon={<FaRegClock/>}/>
+      <UpdateCards title="Total Tasks" count={totalTasks} per={completionPercentage}  color="bg-purple-600" icon={<GrTasks/>}/>
+      <UpdateCards title="Completed" count={completedTask} per={completionPercentage}  color="bg-green-400" icon={<SiGoogletasks/>}/>
+      <UpdateCards title="Pending" count={pendingTasks} per={pendingPercentage}  color="bg-yellow-400" icon={<MdOutlinePendingActions/>}/>
+      <UpdateCards title="Overdue" count={overdueTasks} per={overduePercentage}  color="bg-red-600" icon={<FaRegClock/>}/>
     </div>
     <div className='  flex gap-10 items-center justify-center'>
         
@@ -332,6 +395,7 @@ const Dashboard = () => {
 
 </div>
     </div>
+    </>
   )
 }
 
