@@ -66,60 +66,75 @@ import {
 
 
 
-const data = [
-  { name: "High", value: 40 },
-  { name: "Medium", value: 35 },
-  { name: "Low", value: 25 },
-];
+
 
 const COLORS = ["#EF4444", "#F59E0B", "#10B981"];
 
 
 
 
-const tasks = [
-    {
-      title: "React Assignment",
-      subject: "Web Development",
-      priority: "High",
-      date: "May 25, 2024",
-    },
-    {
-      title: "Database Quiz",
-      subject: "Database Systems",
-      priority: "Medium",
-      date: "May 28, 2024",
-    },
-    {
-      title: "UI/UX Case Study",
-      subject: "UI/UX Design",
-      priority: "Low",
-      date: "May 30, 2024",
-    },
-    {
-      title: "Project Presentation",
-      subject: "Software Engineering",
-      priority: "High",
-      date: "Jun 02, 2024",
-    },
-  ];
 
 
-const linechartdata = [
-  { day: "Mon", tasks: 12 },
-  { day: "Tue", tasks: 18 },
-  { day: "Wed", tasks: 15 },
-  { day: "Thu", tasks: 25 },
-  { day: "Fri", tasks: 20 },
-  { day: "Sat", tasks: 30 },
-  { day: "Sun", tasks: 28 },
-];
+
 
 
 
 const Dashboard = () => {
 
   const{tasks}=useContext(DataContext);
+
+
+//   const linechartdata = [
+//   { day: "Mon", tasks: 12 },
+//   { day: "Tue", tasks: 18 },
+//   { day: "Wed", tasks: 15 },
+//   { day: "Thu", tasks: 25 },
+//   { day: "Fri", tasks: 20 },
+//   { day: "Sat", tasks: 30 },
+//   { day: "Sun", tasks: 28 },
+// ];
+
+
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const linechartdata = weekDays.map((day) => ({
+  day,
+  tasks: 0,
+}));
+
+tasks.forEach((task) => {
+  const dayIndex = new Date(task.dueDate).getDay();
+
+  linechartdata[dayIndex].tasks += 1;
+});
+
+
+
+
+
+
+
+const priorities = ["High", "Medium", "Low"];
+
+const data = priorities.map((name) => ({
+  name,
+  value: 0,
+}));
+
+tasks.forEach((task) => {
+  const index = priorities.indexOf(task.priority);
+
+  if (index !== -1) {
+    data[index].value += 1;
+  }
+});
+
+console.log(data);
+
+
+
+
+
    const getTaskStatus = (task) => {
     if (task.status === "Completed") {
       return "Completed";
@@ -250,13 +265,7 @@ const Dashboard = () => {
           </PieChart>
         </ResponsiveContainer>
 
-              <div className="flex flex-col gap-2">
-                <span className="text-gray-400">40%{"("}10{")"}</span>
-                <span className="text-gray-400">35%{"("}6{")"}</span>
-                <span className="text-gray-400">25%{"("}6{")"}</span>
-                
-                
-                </div>
+             
 
       </div>
     </div>
@@ -328,12 +337,11 @@ const Dashboard = () => {
 
       {/* View All */}
       <div className="text-right mt-5">
-        <Link
-          to="/tasks"
-          className="text-sm font-medium text-purple-600 hover:underline"
-        >
-          View All
-        </Link>
+        <Link to="/tasks?filter=Pending"
+                  className="text-sm font-medium text-purple-600 hover:underline"
+
+        >View All</Link>
+        
       </div>
 
     </div>
@@ -350,7 +358,10 @@ const Dashboard = () => {
 
       <div className="space-y-5">
 
-        {completedTasks.map((task, index) => (
+        {tasks
+        .filter((task) => task.status == "Completed")
+        .map((task,index)=>(
+
           <div
             key={index}
             className="flex items-center justify-between gap-4"
@@ -384,7 +395,7 @@ const Dashboard = () => {
       {/* View All */}
       <div className="text-right mt-5">
         <Link
-          to="/tasks/completed"
+          to="/tasks?filter=Completed"
           className="text-sm font-medium text-purple-600 hover:underline"
         >
           View All

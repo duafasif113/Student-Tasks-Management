@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import { SiElsevier } from "react-icons/si";
 
 
+import { useSearchParams } from "react-router-dom";
+
 
 //update task
 
@@ -89,7 +91,9 @@ const getStatusColor = (status) => {
       return "bg-yellow-100 text-yellow-600";
   }
 };
+const [searchParams] = useSearchParams();
 
+const filter = searchParams.get("filter");
 
 const filteredTasks = tasks.filter((task) => {
   const status = getTaskStatus(task);
@@ -106,10 +110,17 @@ const filteredTasks = tasks.filter((task) => {
     selectedStatus === "All Tasks" ||
     status === selectedStatus;
 
+
+
+     const matchesDashboardFilter =
+    !filter || status === filter;
+
+    
   return (
     matchesSearch &&
     matchesPriority &&
-    matchesStatus
+    matchesStatus&&
+    matchesDashboardFilter
   );
 });
 

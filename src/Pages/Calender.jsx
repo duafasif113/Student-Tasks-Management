@@ -1,15 +1,12 @@
 import React, { useContext, useState } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-
 import { DataContext } from "../context/UserContext";
 
 const CalendarPage = () => {
   const { tasks } = useContext(DataContext);
-
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  // Selected date ko YYYY-MM-DD format me convert karna
   const formatDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -18,89 +15,154 @@ const CalendarPage = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Selected date ke tasks
+  const todayTasks = tasks.filter(
+    (task) => task.dueDate === formatDate(new Date())
+  );
+
   const selectedTasks = tasks.filter(
     (task) => task.dueDate === formatDate(selectedDate)
   );
 
   return (
-    <div className="p-6">
+    <div className="min-h-screen bg-gray-50 p-6">
+      <div className="max-w-7xl mx-auto">
 
-      <h1 className="text-2xl font-bold text-gray-800">
-        Calendar
-      </h1>
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Calendar
+          </h1>
 
-      <p className="text-sm text-gray-500 mt-1 mb-6">
-        View your tasks by due date
-      </p>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* Calendar */}
-<div className="bg-white p-6 rounded-xl border border-gray-200 w-full max-w-lg">
-              <Calendar
-  onChange={setSelectedDate}
-  value={selectedDate}
-  tileContent={({ date, view }) => {
-    if (view !== "month") return null;
-
-    const dateString = formatDate(date);
-
-    const hasTask = tasks.some(
-      (task) => task.dueDate === dateString
-    );
-
-    if (!hasTask) return null;
-
-    return (
-      <div className="flex justify-center mt-1">
-        <span className="w-2 h-2 bg-purple-500 rounded-full"></span>
-      </div>
-    );
-  }}
-/>
+          <p className="text-gray-500 mt-2">
+            Manage and track tasks by due date
+          </p>
         </div>
 
-        {/* Tasks */}
-        <div className="bg-white p-6 rounded-xl border border-gray-200">
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">
-            Tasks for {selectedDate.toLocaleDateString()}
-          </h2>
+          <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <p className="text-sm text-gray-500">Total Tasks</p>
+            <h2 className="text-3xl font-bold mt-2">
+              {tasks.length}
+            </h2>
+          </div>
 
-          {selectedTasks.length === 0 ? (
-            <p className="text-gray-500 text-sm">
-              No tasks for this date.
-            </p>
-          ) : (
-            <div className="space-y-3">
+          <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <p className="text-sm text-gray-500">Today's Tasks</p>
+            <h2 className="text-3xl font-bold mt-2">
+              {todayTasks.length}
+            </h2>
+          </div>
 
-              {selectedTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className="p-4 border border-gray-200 rounded-lg"
-                >
-                  <h3 className="font-semibold text-gray-800">
-                    {task.title}
-                  </h3>
-
-                  <p className="text-sm text-gray-500 mt-1">
-                    {task.subject}
-                  </p>
-
-                  <span className="text-xs text-purple-600">
-                    {task.priority}
-                  </span>
-                </div>
-              ))}
-
-            </div>
-          )}
+          <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+            <p className="text-sm text-gray-500">Selected Date</p>
+            <h2 className="text-3xl font-bold mt-2">
+              {selectedTasks.length}
+            </h2>
+          </div>
 
         </div>
 
-      </div>
+        {/* Calendar + Tasks */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
+          {/* Calendar Card */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+
+            <Calendar
+              onChange={setSelectedDate}
+              value={selectedDate}
+              className="w-full border-none"
+              tileContent={({ date, view }) => {
+                if (view !== "month") return null;
+
+                const count = tasks.filter(
+                  (task) => task.dueDate === formatDate(date)
+                ).length;
+
+                if (!count) return null;
+
+                return (
+                  <div className="flex justify-center mt-1">
+                    <span className="text-[10px] font-bold text-purple-600">
+                      {count}
+                    </span>
+                  </div>
+                );
+              }}
+            />
+
+          </div>
+
+          {/* Tasks Card */}
+          <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Tasks for {selectedDate.toLocaleDateString()}
+            </h2>
+
+            {selectedTasks.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16">
+
+                <div className="text-5xl">📅</div>
+
+                <h3 className="mt-4 text-lg font-semibold">
+                  No Tasks Found
+                </h3>
+
+                <p className="text-gray-500 text-sm mt-2">
+                  No tasks scheduled for this day.
+                </p>
+
+              </div>
+            ) : (
+              <div className="space-y-4">
+
+                {selectedTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="p-4 rounded-xl border border-gray-200 hover:shadow-md transition"
+                  >
+
+                    <h3 className="font-semibold text-gray-800">
+                      {task.title}
+                    </h3>
+
+                    <p className="text-sm text-gray-500 mt-1">
+                      {task.subject}
+                    </p>
+
+                    <div className="mt-3 flex justify-between items-center">
+
+                      <span
+                        className={`px-3 py-1 text-xs rounded-full font-medium ${
+                          task.priority === "High"
+                            ? "bg-red-100 text-red-600"
+                            : task.priority === "Medium"
+                            ? "bg-yellow-100 text-yellow-600"
+                            : "bg-green-100 text-green-600"
+                        }`}
+                      >
+                        {task.priority}
+                      </span>
+
+                      <span className="text-xs text-gray-500">
+                        {task.dueDate}
+                      </span>
+
+                    </div>
+
+                  </div>
+                ))}
+
+              </div>
+            )}
+
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 };
