@@ -20,23 +20,6 @@ import { FaCheckSquare } from "react-icons/fa";
 
 
 
-  const completedTasks = [
-    {
-      title: "HTML Assignment",
-      subject: "Web Development",
-      date: "May 18, 2024",
-    },
-    {
-      title: "JavaScript Quiz",
-      subject: "Web Development",
-      date: "May 16, 2024",
-    },
-    {
-      title: "Data Structures HW",
-      subject: "Computer Science",
-      date: "May 14, 2024",
-    },
-  ];
 
 
 
@@ -84,15 +67,7 @@ const Dashboard = () => {
   const{tasks}=useContext(DataContext);
 
 
-//   const linechartdata = [
-//   { day: "Mon", tasks: 12 },
-//   { day: "Tue", tasks: 18 },
-//   { day: "Wed", tasks: 15 },
-//   { day: "Thu", tasks: 25 },
-//   { day: "Fri", tasks: 20 },
-//   { day: "Sat", tasks: 30 },
-//   { day: "Sun", tasks: 28 },
-// ];
+
 
 
 const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];

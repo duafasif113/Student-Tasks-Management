@@ -1,15 +1,27 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import UserContext from './context/UserContext.jsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
 
-createRoot(document.getElementById('root')).render(
+import UserContext from "./context/UserContext.jsx";
+import { SubjectsProvider } from "./context/SubjectsContext.jsx";
+
+import { Auth0Provider } from "@auth0/auth0-react";
+
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-<UserContext>
-
-        <App />
-
-      </UserContext>
-        </StrictMode>,
-)
+    <Auth0Provider
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+      }}
+    >
+      <SubjectsProvider>
+        <UserContext>
+          <App />
+        </UserContext>
+      </SubjectsProvider>
+    </Auth0Provider>
+  </StrictMode>
+);

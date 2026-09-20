@@ -86,34 +86,8 @@ const Sidebar = () => {
                 </div>
 
         </NavLink>
-               <NavLink
-          to="/stat"
-          className={({ isActive }) =>
-            isActive
-              ? "flex  items-center gap-2 text-xl text-purple-500 w-[180px] py-2 px-2 text-gray-600  bg-purple-100 "
-              : "flex  items-center gap-2 text-xl  text-gray-600"
-          }
-        >
-                        <IoMdStats />
-                <div>
-                Statistics
-                </div>
-
-        </NavLink>
-               <NavLink
-          to="/settings"
-          className={({ isActive }) =>
-            isActive
-              ? "flex  items-center gap-2 text-xl text-purple-500 w-[180px] py-2 px-2 text-gray-600  bg-purple-100 "
-              : "flex  items-center gap-2 text-xl  text-gray-600"
-          }
-        >
-                        <IoSettingsOutline />
-                <div>
-                Settings
-                </div>
-
-        </NavLink>
+               
+               
   
            
         </div>

@@ -8,15 +8,17 @@ import {
   FaBook,
   FaAlignLeft,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-
-
-
+import { useSubjects } from "../context/SubjectsContext";
 
 import Tasks from "./Tasks";
 const AddTask = () => {
 
 const{addTask,editingTask, setEditingTask,updateTask }=useContext(DataContext);
+
+ const { subjects } = useSubjects();
+
 
 
         const [showAddTask, setShowAddTask] = useState(false);
@@ -37,7 +39,6 @@ const{addTask,editingTask, setEditingTask,updateTask }=useContext(DataContext);
     setDueDate(editingTask.dueDate);
   }
 }, [editingTask]);
-
 
 
 
@@ -75,9 +76,8 @@ const{addTask,editingTask, setEditingTask,updateTask }=useContext(DataContext);
     setDueDate("");
       setShowAddTask(true); 
   };
+const navigate = useNavigate();
 
-
- 
 
 
   return (
@@ -134,26 +134,34 @@ const{addTask,editingTask, setEditingTask,updateTask }=useContext(DataContext);
               <div className="relative">
                 <FaBook className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
-                <select
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 bg-white"
-                  required
-                >
-                  <option value="">Select Subject</option>
-                  <option value="Web Development">
-                    Web Development
-                  </option>
-                  <option value="Database">
-                    Database
-                  </option>
-                  <option value="Data Structures">
-                    Data Structures
-                  </option>
-                  <option value="Operating System">
-                    Operating System
-                  </option>
-                </select>
+
+<select
+  value={subject}
+  onChange={(e) => {
+    if (e.target.value === "add-subject") {
+      navigate("/subjects");
+      return;
+    }
+
+    setSubject(e.target.value);
+  }}
+  className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-purple-500 bg-white"
+>
+  <option value="">Select Subject</option>
+
+  {subjects.map((subject) => (
+    <option
+      key={subject.id}
+      value={subject.title}
+    >
+      {subject.title}
+    </option>
+  ))}
+
+  <option value="add-subject">
+    ➕ Add New Subject
+  </option>
+</select>
               </div>
             </div>
 
